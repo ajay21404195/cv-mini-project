@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: paddy-disease-detection  # Change this to your app's name
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app  # 'app' is the name of your Flask app object
+    envVars:
+      - key: FLASK_ENV
+        value: production
