@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rice Leaf Disease Classifier</title>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .bg-video {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 50%;
+      min-height: 50%;
+      z-index: -1;
+      object-fit: cover;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      color: white;
+      padding-top: 100px;
+    }
+
+    h1 {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+
+    p.instruction {
+      font-size: 22px;
+      margin-bottom: 30px;
+    }
+
+    input[type="file"] {
+      font-size: 18px;
+      padding: 10px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    input[type="submit"] {
+      background-color: #27ae60;
+      color: white;
+      font-size: 18px;
+      padding: 15px 30px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 30px;
+      font-size: 22px;
+      color: white;
+    }
+
+    .image-container {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .image-container img {
+      max-width: 300px;
+      max-height: 300px;
+      border: 3px solid white;
+      border-radius: 10px;
+    }
+
+    /* Responsive Design: Media Query */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 36px;
+      }
+
+      p.instruction {
+        font-size: 18px;
+      }
+
+      input[type="file"],
+      input[type="submit"] {
+        width: 90%;
+        font-size: 16px;
+        padding: 10px;
+      }
+
+      .image-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .image-container img {
+        max-width: 90%;
+        height: auto;
+      }
+
+      .content {
+        padding: 20px;
+        padding-top: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background video -->
+  <video autoplay muted loop class="bg-video">
+    <source src="{{ url_for('static', filename='paddy.mp4') }}" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+
+  <!-- Content on top of video -->
+  <div class="content">
+    <h1>Rice Leaf Disease Classifier</h1>
+    <p class="instruction">Select an image of a rice leaf to identify the disease type.</p>
+
+    <form action="/" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" accept="image/*" required><br>
+      <input type="submit" value="Predict">
+    </form>
+
+    <div class="result">
+      {% if prediction %}
+        <strong>Predicted Class:</strong> {{ prediction }}<br>
+        <strong>Confidence:</strong> {{ confidence }}%
+      {% endif %}
+    </div>
+
+    {% if uploaded_image %}
+      <div class="image-container">
+        <div>
+          <h3>Uploaded Image:</h3>
+          <img src="{{ uploaded_image }}" alt="Uploaded Image">
+        </div>
+
+        {% if sift_image %}
+          <div>
+            <h3>SIFT Key Features:</h3>
+            <img src="{{ sift_image }}" alt="SIFT Keypoints (Visual Clues for Disease)">
+          </div>
+        {% endif %}
+
+        {% if log_image %}
+          <div>
+            <h3>LoG Features:</h3>
+            <img src="{{ log_image }}" alt="Laplacian of Gaussian (LoG) Keypoints">
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+</body>
+</html>
